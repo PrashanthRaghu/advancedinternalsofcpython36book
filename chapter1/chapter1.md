@@ -46,11 +46,15 @@ Let​ ​us​ ​examine​ ​the​ ​steps​ for​ ​setting​ up​ �
 	8. Complete​ ​ the​ ​ wizard​ ​ by​ ​ selecting​ ​ the​ ​ folder​ ​ from​ ​ the​ ​ menu​ ​ and​ ​ the​ ​ project to​ ​ import​ ​ to​ ​ as​ ​ python-source.
 	
 	9. Select​ ​ the​ ​ Run​ ​ Menu​ ​ and​ ​ then​ ​ select​ ​ Debug​ ​ Configurations​ ​ to​ ​ open​ ​ the debug​ ​ menu​ ​ as​ ​ shown​ ​ below.
-	
-	10. ![img](img/img3.png)
+
+	10.
+![img](img/img3.png)
 	
 	11. Select​ ​ the​ ​ python​ ​ executable​ ​ as​ ​ shown​ ​ below.
-	12. ![img](img/img4.png)
+
+	12.
+![img](img/img4.png)
+
 	13. Click​ ​ on​ ​ the​ ​ debug​ ​ option​ ​ and​ ​ you​ ​ must​ ​ see​ ​ ​ the​ ​ python​ ​ shell​ ​ in​ ​ the debug​ ​ menu.
 
 ![img](img/img5.png)
