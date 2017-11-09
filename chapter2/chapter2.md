@@ -353,7 +353,7 @@ Observations​ ​ from​ ​ Listing​ ​ 1.7:
  
 Memory​ ​ Representation​ ​ of​ ​ a ​ ​ PyArena. 
 
-![img](img/img.png)
+![img](img/img1.png)
 
 ### Use​ ​ Case​ ​ Studies​ ​ of​ ​ PyArena 
 
