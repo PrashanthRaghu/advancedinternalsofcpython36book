@@ -389,4 +389,26 @@ seq​ ->​ size​ ​ = ​ ​ size;
 return​​ ​ seq;
 }
 ```
+Observations​ ​ from​ ​ listing​ ​ 1.8: 
+ 
+1. Function​ ​ called​ ​ by​ ​ the​ ​ function​ ​ PyAST_FromNodeObject​ ​ (ast.c​ ​ line​ ​ number​ ​ 761).​ ​ Used to​ ​ construct​ ​ Abstract​ ​ Syntax​ ​ tree​ ​ from​ ​ the​ ​ parse​ ​ tree. 
+ 
+ 
+### Developer ​ ​ Community ​ ​ Insights ​ ​ ( ​ ​ IRC ​ ​ insights ​ ​ ): 
+ 
+pthewriter:​ ​ I ​ ​ was​ ​ curious​ ​ why​ ​ a ​ ​ new​ ​ system​ ​ of​ ​ memory​ ​ management​ ​ just​ ​ for​ ​ the​ ​ parsing stage.  
+ 
+The​ ​ insights​ ​ from​ ​ the​ ​ community​ ​ was​ ​ as​ ​ follows: 
+ 
+haypo:​ ​ ​ “since​ ​ all​ ​ objects​ ​ used​ ​ for​ ​ parsing​ ​ are​ ​ removed​ ​ after​ ​ parsing​ ​ otherwise,​ ​ it​ ​ would​ ​ put "holes"​ ​ in​ ​ the​ ​ general​ ​ memory​ ​ allocator”.  
+ 
+ 
+### 1.1c:​ ​ Debugging​ ​ session: 
+ 
+In​ ​ this​ ​ topic​ ​ we​ ​ shall​ ​ look​ ​ at​ ​ debugging​ ​ the​ ​ functioning​ ​ of​ ​ the​ ​ PyArena.  
+ 
+1.1.c.a:​ ​ Debugging​ ​ the​ ​ size​ ​ of​ ​ a ​ ​ PyArena 
+ 
+Insert​ ​ a ​ ​ breakpoint​ ​ on​ ​ the​ ​ file​ ​ pyarena.c​ ​ on​ ​ line​ ​ number​ ​ 130.​ ​ Create​ ​ a ​ ​ watch​ ​ expression​ ​ for the​ ​ size​ ​ of​ ​ PyArena.​ ​ It​ ​ is​ ​ seen​ ​ that​ ​ the​ ​ size​ ​ is​ ​ 64​ ​ bytes. 
+![img](img/img2.png)
 
