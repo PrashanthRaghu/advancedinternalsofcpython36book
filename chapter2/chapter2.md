@@ -411,4 +411,199 @@ In​ ​ this​ ​ topic​ ​ we​ ​ shall​ ​ look​ ​ at​ ​ 
  
 Insert​ ​ a ​ ​ breakpoint​ ​ on​ ​ the​ ​ file​ ​ pyarena.c​ ​ on​ ​ line​ ​ number​ ​ 130.​ ​ Create​ ​ a ​ ​ watch​ ​ expression​ ​ for the​ ​ size​ ​ of​ ​ PyArena.​ ​ It​ ​ is​ ​ seen​ ​ that​ ​ the​ ​ size​ ​ is​ ​ 64​ ​ bytes. 
 ![img](img/img2.png)
+ 
+Since​ ​ PY_DEBUG​ ​ is​ ​ enabled​ ​ the​ ​ 5 ​ ​ long​ ​ values​ ​ are​ ​ added​ ​ to​ ​ the​ ​ PyArena​ ​ object​ ​ along​ ​ with​ ​ the 
+three​ ​ pointers​ ​ and​ ​ hence​ ​ the​ ​ size​ ​ 64​ ​ bytes.​ ​ ( ​ ​ Reference​ ​ : ​ ​ Listing​ ​ 1.2​ ​ ​ ) 
+ 
+Let​ ​ us​ ​ now​ ​ examine​ ​ the​ ​ size​ ​ of​ ​ a ​ ​ block.​ ​ Insert​ ​ a ​ ​ breakpoint​ ​ on​ ​ line​ ​ number​ ​ 80​ ​ in​ ​ the​ ​ same​ ​ file. 
+Add​ ​ a ​ ​ watch​ ​ expression​ ​ :  
+```
+sizeof​ ( ​ block​ ) ​ ​ + ​ ​ size  
+```
+![img](img/img3.png)
+We​ ​ observe​ ​ that​ ​ the​ ​ size​ ​ is​ ​ 8224​ ​ that​ ​ is​ ​ because​ ​ the​ ​ block​ ​ contains​ ​ the​ ​ area​ ​ of​ ​ memory​ ​ to store​ ​ the​ ​ data​ ​ within​ ​ the​ ​ arena.  
+ 
+Let​ ​ us​ ​ study​ ​ the​ ​ sample​ ​ allocation​ ​ of​ ​ an​ ​ object​ ​ into​ ​ an​ ​ arena.​ ​ Insert​ ​ a ​ ​ breakpoint​ ​ on​ ​ line number​ ​ 182.  
+![img](img/img4.png)
+The​ ​ allocation​ ​ is​ ​ while​ ​ converting​ ​ the​ ​ parse​ ​ tree​ ​ to​ ​ AST.​ ​ ​ We​ ​ observe​ ​ that​ ​ the​ ​ size​ ​ of​ ​ the requested​ ​ allocation​ ​ unit​ ​ is​ ​ 16​ ​ bytes.  
+ 
+### Additional ​ ​ Information: 
+ 
+During​ ​ additional​ ​ debugging​ ​ I ​ ​ found​ ​ that​ ​ the​ ​ objects​ ​ allocated​ ​ on​ ​ the​ ​ arena​ ​ were​ ​ majorly​ ​ of smaller​ ​ sizes. 
+ 
+ 
+Exercises: 
+ 
+Conduct​ ​ the​ ​ debugging​ ​ for​ ​ the​ ​ following​ ​ programs 
+ 
+1) class​​ ​ test:
+pass
+​2) h ​ ​ = ​ ​ {“a”​ ​ : ​ ​ 1,​ ​ “b”​ ​ : ​ ​ 2}
 
+Observe​ ​ the​ ​ sizes​ ​ of​ ​ the​ ​ data​ ​ allocated​ ​ on​ ​ the​ ​ arena.​ ​ Share​ ​ your​ ​ results​ ​ on [http://intopython.com​](http://intopython.com​) . 
+
+ 
+Topic​ ​ 1.2​ ​ : ​ ​ The​ ​ Python​ ​ Grammer  
+ 
+ 
+The​ ​ python​ ​ parser​ ​ is​ ​ an​ ​ LL(1)​​ ​ parser​ ​ and​ ​ the​ ​ extended​ ​ Backus​ ​ Naur​ ​ Form​ ​ of​ ​ the​ ​ grammar​ ​ is defined​ ​ in​ ​ the​ ​ file​ ​ Grammar/Grammar.  
+ 
+Listing​ ​ 1.9:​ ​ The​ ​ EB​ ​ Grammar​ ​ of​ ​ Python​ ​ 3.6 
+```c
+#​Grammar​ ​ for​ ​ Python
+#​​Note:​ ​ ​ Changing​ ​ the​ ​ grammar​ ​ specified​ ​ in​ ​ this​ ​ file​ ​ will​ ​ most​ ​ likely
+#require​ ​ corresponding​ ​ changes​ ​ in​ ​ the​ ​ parser​ ​ module
+#(../Modules/parsermodule.c).​ ​ ​ If​ ​ you​ ​ can't​ ​ make​ ​ the​ ​ changes​ ​ to
+#that​ ​ module​ ​ yourself,​ ​ please​ ​ co-ordinate​ ​ the​ ​ required​ ​ changes
+#with​ ​ someone​ ​ who​ ​ can;​ ​ ask​ ​ around​ ​ on​ ​ python-dev​ ​ for​ ​ help.​ ​ ​ Fred
+#Drake​ ​ <fdrake@acm.org>​ ​ will​ ​ probably​ ​ be​ ​ listening​ ​ there.
+#​NOTE​ ​ WELL:​ ​ You​ ​ should​ ​ also​ ​ follow​ ​ all​ ​ the​ ​ steps​ ​ listed​ ​ at
+#​https://docs.python.org/devguide/grammar.html
+#​Start​ ​ symbols​ ​ for​ ​ the​ ​ grammar:
+#single_input​ ​ is​ ​ a ​ ​ single​ ​ interactive​ ​ statement;
+#file_input​ ​ is​ ​ a ​ ​ module​ ​ or​ ​ sequence​ ​ of​ ​ commands​ ​ read​ ​ from​ ​ an​ ​ input
+file;
+#eval_input​ ​ is​ ​ the​ ​ input​ ​ for​ ​ the​ ​ eval()​ ​ functions.
+#​NB:​ ​ compound_stmt​ ​ in​ ​ single_input​ ​ is​ ​ followed​ ​ by​ ​ extra​ ​ NEWLINE!
+#​ ​ NB:​ ​ compound_stmt​ ​ in​ ​ single_input​ ​ is​ ​ followed​ ​ by​ ​ extra​ ​ NEWLINE!
+single_input​ : ​ ​ NEWLINE​ ​ | ​ ​ simple_stmt​ ​ | ​ ​ compound_stmt​ ​ NEWLINE
+file_input​ : ​ ​ ( ​ NEWLINE​ ​ | ​ ​ stmt​ )*​​ ​ ENDMARKER
+eval_input​ : ​ ​ testlist​ ​ NEWLINE​ * ​ ​ ENDMARKER
+decorator​ : ​ ​ '@'​​ ​ dotted_name​ ​ [ ​ ​ '('​​ ​ [ ​ arglist​ ] ​ ​ ')'​​ ​ ] ​ ​ NEWLINE
+decorators​ : ​ ​ decorator+
+decorated​ : ​ ​ decorators​ ​ ( ​ classdef​ ​ | ​ ​ funcdef​ ​ | ​ ​ async_funcdef)
+async_funcdef​ : ​ A
+SYNC​ ​ funcdef
+funcdef​ : ​ ​ 'def'​​ N
+AME​ ​ parameters​ ​ [ ​ '->'​​ ​ test​ ] ​ ​ ':'​​ ​ suite
+parameters​ : ​ ​ '('​​ ​ [ ​ typedargslist​ ] ​ ​ ')'
+typedargslist​ : ​ ​ ( ​ tfpdef​ ​ [ ​ '='​​ ​ test​ ] ​ ​ ( ​ ','​​ ​ tfpdef​ ​ [ ​ '='​​ ​ test​ ])*​​ ​ [ ​ ','​​ ​ [
+'*'​​ ​ [ ​ tfpdef​ ] ​ ​ ( ​ ','​​ ​ tfpdef​ ​ [ ​ '='​​ ​ test​ ])*​​ ​ [ ​ ','​​ ​ [ ​ '**'​​ ​ tfpdef​ ​ [ ​ ','​ ]]]
+|​​ ​ '**'​​ ​ tfpdef​ ​ [ ​ ','​ ]]]
+​ ​ | ​ ​ '*'​​ ​ [ ​ tfpdef​ ] ​ ​ ( ​ ','​​ ​ tfpdef​ ​ [ ​ '='​​ ​ test​ ])*​​ ​ [ ​ ','​​ ​ [ ​ '**'​​ ​ tfpdef​ ​ [ ​ ','​ ]]]
+​ ​ | ​ ​ '**'​​ ​ tfpdef​ ​ [ ​ ','​ ])
+tfpdef​ : ​ ​ NAME​ ​ [ ​ ':'​​ ​ test]
+varargslist​ : ​ ​ ( ​ vfpdef​ ​ [ ​ '='​​ ​ test​ ] ​ ​ ( ​ ','​​ ​ vfpdef​ ​ [ ​ '='​​ ​ test​ ])*​​ ​ [ ​ ','​​ ​ [
+'*'​​ ​ [ ​ vfpdef​ ] ​ ​ ( ​ ','​​ ​ vfpdef​ ​ [ ​ '='​​ ​ test​ ])*​​ ​ [ ​ ','​​ ​ [ ​ '**'​​ ​ vfpdef​ ​ [ ​ ','​ ]]]
+|​​ ​ '**'​​ ​ vfpdef​ ​ [ ​ ','​ ]]]
+​ ​ | ​ ​ '*'​​ ​ [ ​ vfpdef​ ] ​ ​ ( ​ ','​​ ​ vfpdef​ ​ [ ​ '='​​ ​ test​ ])*​​ ​ [ ​ ','​​ ​ [ ​ '**'​​ ​ vfpdef​ ​ [ ​ ','​ ]]]
+​ ​ | ​ ​ '**'​​ ​ vfpdef​ ​ [ ​ ',']
+)
+vfpdef​ : ​ ​ NAME
+stmt​ : ​ ​ simple_stmt​ ​ | ​ ​ compound_stmt
+simple_stmt​ : ​ ​ small_stmt​ ​ ( ​ ';'​​ ​ small_stmt​ )*​​ ​ [ ​ ';'​ ] ​ ​ NEWLINE
+small_stmt​ : ​ ​ ( ​ expr_stmt​ ​ | ​ ​ del_stmt​ ​ | ​ ​ pass_stmt​ ​ | ​ ​ flow_stmt​ ​ |
+import_stmt​ ​ | ​ ​ global_stmt​ ​ | ​ ​ nonlocal_stmt​ ​ | ​ ​ assert_stmt
+expr_stmt​ : ​ ​ testlist_star_expr​ ​ ( ​ annassign​ ​ | ​ ​ augassign​ ​ ( ​ yield_expr​ | ​ testlist​ )
+|
+(​ '='​​ ​ ( ​ yield_expr​ | ​ testlist_star_expr​ ))*)
+annassign​ : ​ ​ ':'​​ ​ test​ ​ [ ​ '='​​ ​ test]
+testlist_star_expr​ : ​ ​ ( ​ test​ | ​ star_expr​ ) ​ ​ ( ​ ','​​ ​ ( ​ test​ | ​ star_expr​ ))*​​ ​ [ ​ ',']
+augassign​ : ​ ​ ( ​ '+='​​ ​ | ​ ​ '-='​​ ​ | ​ ​ '*='​​ ​ | ​ ​ '@='​​ ​ | ​ ​ '/='​​ ​ | ​ ​ '%='​​ ​ | ​ ​ '&='​​ ​ | ​ ​ '|='​​ ​ | ​ ​ '^='​​ ​ |
+'<<='​​ ​ | ​ ​ '>>='​​ ​ | ​ ​ '**='​​ ​ | ​ ​ '//=')
+#​ ​ For​ ​ normal​ ​ and​ ​ annotated​ ​ assignments,​ ​ additional​ ​ restrictions​ ​ enforced​ ​ by
+the​ ​ interpreter
+del_stmt​ : ​ ​ 'del'​​ ​ exprlist
+pass_stmt​ : ​ ​ 'pass'
+flow_stmt​ : ​ ​ break_stmt​ ​ | ​ ​ continue_stmt​ ​ | ​ ​ return_stmt​ ​ | ​ ​ raise_stmt​ ​ |
+yield_stmt
+break_stmt​ : ​ ​ 'break'
+continue_stmt​ : ​ ​ 'continue'
+return_stmt​ : ​ ​ 'return'​​ ​ [ ​ testlist]
+yield_stmt​ : ​ ​ yield_expr
+raise_stmt​ : ​ ​ 'raise'​​ ​ [ ​ test​ ​ [ ​ 'from'​​ ​ test​ ]]
+import_stmt​ : ​ ​ import_name​ ​ | ​ ​ import_from
+import_name​ : ​ ​ 'import'​​ ​ dotted_as_names
+#​ ​ note​ ​ below:​ ​ the​ ​ ('.'​ ​ | ​ ​ '...')​ ​ is​ ​ necessary​ ​ because​ ​ '...'​ ​ is​ ​ tokenized​ ​ as
+ELLIPSIS
+import_from​ : ​ ​ ( ​ 'from'​​ ​ ((​ '.'​​ ​ | ​ ​ '...'​ )*​​ ​ dotted_name​ ​ | ​ ​ ( ​ '.'​​ ​ | ​ ​ '...'​ )+)
+'import'​​ ​ ( ​ '*'​​ ​ | ​ ​ '('​​ ​ import_as_names​ ​ ')'​​ ​ | ​ ​ import_as_names​ ))
+import_as_name​ : ​ ​ NAME​ ​ [ ​ 'as'​​ ​ NAME]
+dotted_as_name​ : ​ ​ dotted_name​ ​ [ ​ 'as'​​ ​ NAME]
+import_as_names​ : ​ ​ import_as_name​ ​ ( ​ ','​​ ​ import_as_name​ )*​​ ​ [ ​ ',']
+dotted_as_names​ : ​ ​ dotted_as_name​ ​ ( ​ ','​​ ​ dotted_as_name​ )*
+dotted_name​ : ​ ​ NAME​ ​ ( ​ '.'​​ ​ NAME​ )*
+global_stmt​ : ​ ​ 'global'​​ ​ NAME​ ​ ( ​ ','​​ ​ NAME​ )*
+nonlocal_stmt​ : ​ ​ 'nonlocal'​​ ​ NAME​ ​ ( ​ ','​​ ​ NAME​ )*
+assert_stmt​ : ​ ​ 'assert'​​ ​ test​ ​ [ ​ ','​​ ​ test]
+
+compound_stmt​ : ​ ​ if_stmt​ ​ | ​ ​ while_stmt​ ​ | ​ ​ for_stmt​ ​ | ​ ​ try_stmt​ ​ | ​ ​ with_stmt​ ​ |
+funcdef​ ​ | ​ ​ classdef​ ​ | ​ ​ decorated​ ​ | ​ ​ async_stmt
+async_stmt​ : ​ ​ ASYNC​ ​ ( ​ funcdef​ ​ | ​ ​ with_stmt​ ​ | ​ ​ for_stmt)
+if_stmt​ : ​ ​ 'if'​​ ​ test​ ​ ':'​​ ​ suite​ ​ ( ​ 'elif'​​ ​ test​ ​ ':'​​ ​ suite​ )*​​ ​ [ ​ 'else'​​ ​ ':'​​ ​ suite]
+while_stmt​ : ​ ​ 'while'​​ ​ test​ ​ ':'​​ ​ suite​ ​ [ ​ 'else'​​ ​ ':'​​ ​ suite]
+for_stmt​ : ​ ​ 'for'​​ ​ exprlist​ ​ 'in'​​ ​ testlist​ ​ ':'​​ ​ suite​ ​ [ ​ 'else'​​ ​ ':'​​ ​ suite]
+try_stmt​ : ​ ​ ( ​ 'try'​​ ​ ':'​​ ​ suite
+((​ except_clause​ ​ ':'​​ ​ suite​ )+
+[​ 'else'​​ ​ ':'​​ ​ suite]
+[​ 'finally'​​ ​ ':'​​ ​ suite​ ] ​ ​ |
+'finally'​​ ​ ':'​​ ​ suite​ ))
+with_stmt​ : ​ ​ 'with'​​ ​ with_item​ ​ ( ​ ','​​ ​ with_item​ )*​​ ​ ​ ':'​​ ​ suite
+with_item​ : ​ ​ test​ ​ [ ​ 'as'​​ ​ expr]
+#​ ​ NB​ ​ compile.c​ ​ makes​ ​ sure​ ​ that​ ​ the​ ​ default​ ​ except​ ​ clause​ ​ is​ ​ last
+except_clause​ : ​ ​ 'except'​​ ​ [ ​ test​ ​ [ ​ 'as'​​ ​ NAME​ ]]
+suite​ : ​ ​ simple_stmt​ ​ | ​ ​ NEWLINE​ ​ INDENT​ ​ stmt​ + ​ ​ DEDENT
+test​ : ​ ​ or_test​ ​ [ ​ 'if'​​ ​ or_test​ ​ 'else'​​ ​ test​ ] ​ ​ | ​ lambdef
+test_nocond​ : ​ ​ or_test​ ​ | ​ ​ lambdef_nocond
+lambdef​ : ​ ​ 'lambda'​​ ​ [ ​ varargslist​ ] ​ ​ ':'​​ ​ test
+lambdef_nocond​ : ​ ​ 'lambda'​​ ​ [ ​ varargslist​ ] ​ ​ ':'​​ test_nocond
+or_test​ : ​ ​ and_test​ ​ ( ​ 'or'​​ ​ and_test​ )*
+and_test​ : ​ ​ not_test​ ​ ( ​ 'and'​​ ​ not_test​ )*
+not_test​ : ​ ​ 'not'​​ ​ not_test​ ​ | ​ ​ comparison
+comparison​ : ​ ​ expr​ ​ ( ​ comp_op​ ​ expr​ )*
+#​ ​ <>​ ​ isn't​ ​ actually​ ​ a ​ ​ valid​ ​ comparison​ ​ operator​ ​ in​ ​ Python.​ ​ It's​ ​ here​ ​ for
+the
+#​ ​ sake​ ​ of​ ​ a ​ ​ __future__​ ​ import​ ​ described​ ​ in​ ​ PEP​ ​ 401​ ​ (which​ ​ really​ ​ works​ ​ :-)
+comp_op​ : ​ ​ '<'​ | ​ '>'​ | ​ '=='​ | ​ '>='​ | ​ '<='​ | ​ '<>'​ | ​ '!='​ | ​ 'in'​ | ​ 'not'​​ ​ 'in'​ | ​ 'is'​ | ​ 'is'​​ ​ 'not'
+star_expr​ : ​ ​ '*'​​ ​ expr
+expr​ : ​ ​ xor_expr​ ​ ( ​ '|'​​ ​ xor_expr​ )*
+xor_expr​ : ​ ​ and_expr​ ​ ( ​ '^'​​ ​ and_expr​ )*
+and_expr​ : ​ ​ shift_expr​ ​ ( ​ '&'​​ ​ shift_expr​ )*
+shift_expr​ : ​ ​ arith_expr​ ​ ((​ '<<'​ | ​ '>>'​ ) ​ ​ arith_expr​ )*
+arith_expr​ : ​ ​ term​ ​ ((​ '+'​ | ​ '-'​ ) ​ ​ term​ )*
+term​ : ​ ​ factor​ ​ ((​ '*'​ | ​ '@'​ | ​ '/'​ | ​ '%'​ | ​ '//'​ ) ​ ​ factor​ )*
+factor​ : ​ ​ ( ​ '+'​ | ​ '-'​ | ​ '~'​ ) ​ ​ factor​ ​ | ​ ​ power
+power​ : ​ ​ atom_expr​ ​ [ ​ '**'​​ ​ factor]
+atom_expr​ : ​ ​ [ ​ AWAIT​ ] ​ ​ atom​ ​ trailer*
+atom​ : ​ ​ ( ​ '('​​ ​ [ ​ yield_expr​ | ​ testlist_comp​ ] ​ ​ ')'​​ ​ |
+'['​​ ​ [ ​ testlist_comp​ ] ​ ​ ']'​​ ​ |
+'{'​​ ​ [ ​ dictorsetmaker​ ] ​ ​ '}'​​ ​ |
+NAME​ ​ | ​ ​ NUMBER​ ​ | ​ ​ STRING​ + ​ ​ | ​ ​ '...'​​ ​ | ​ ​ 'None'​​ ​ | ​ ​ 'True'​​ ​ | ​ ​ 'False')
+testlist_comp​ : ​ ​ ( ​ test​ | ​ star_expr​ ) ​ ​ ( ​ ​ comp_for​ ​ | ​ ​ ( ​ ','​​ ​ ( ​ test​ | ​ star_expr​ ))*​​ ​ [ ​ ','​ ]
+)
+trailer​ : ​ ​ '('​​ ​ [ ​ arglist​ ] ​ ​ ')'​​ ​ | ​ ​ '['​​ ​ subscriptlist​ ​ ']'​​ ​ | ​ ​ '.'​​ ​ NAME
+subscriptlist​ : ​ ​ subscript​ ​ ( ​ ','​​ ​ subscript​ )*​​ ​ [ ​ ',']
+subscript​ : ​ ​ test​ ​ | ​ ​ [ ​ test​ ] ​ ​ ':'​​ ​ [ ​ test​ ] ​ ​ [ ​ sliceop]
+sliceop​ : ​ ​ ':'​​ ​ [ ​ test]
+exprlist​ : ​ ​ ( ​ expr​ | ​ star_expr​ ) ​ ​ ( ​ ','​​ ​ ( ​ expr​ | ​ star_expr​ ))*​​ ​ [ ​ ',']
+testlist​ : ​ ​ test​ ​ ( ​ ','​​ ​ test​ )*​​ ​ [ ​ ',']
+dictorsetmaker​ : ​ ​ ( ​ ​ ((​ test​ ​ ':'​​ ​ test​ ​ | ​ ​ '**'​​ ​ expr)
+(​ comp_for​ ​ | ​ ​ ( ​ ','​​ ​ ( ​ test​ ​ ':'​​ ​ test​ ​ | ​ ​ '**'​​ ​ expr​ ))*​​ ​ [ ​ ','​ ]))​​ ​ |
+((​ test​ ​ | ​ ​ star_expr)
+(​ comp_for​ ​ | ​ ​ ( ​ ','​​ ​ ( ​ test​ ​ | ​ ​ star_expr​ ))*​​ ​ [ ​ ','​ ]))​​ ​ )
+classdef​ : ​ ​ 'class'​​ ​ NAME​ ​ [ ​ '('​​ ​ [ ​ arglist​ ] ​ ​ ')'​ ] ​ ​ ':'​​ ​ suite
+arglist​ : ​ ​ argument​ ​ ( ​ ','​​ ​ argument​ )*​​ ​ ​ [ ​ ',']
+#​ ​ The​ ​ reason​ ​ that​ ​ keywords​ ​ are​ ​ test​ ​ nodes​ ​ instead​ ​ of​ ​ NAME​ ​ is​ ​ that​ ​ using
+NAME
+#​ ​ results​ ​ in​ ​ an​ ​ ambiguity.​ ​ ast.c​ ​ makes​ ​ sure​ ​ it's​ ​ a ​ ​ NAME.
+#​ ​ "test​ ​ '='​ ​ test"​ ​ is​ ​ really​ ​ "keyword​ ​ '='​ ​ test",​ ​ but​ ​ we​ ​ have​ ​ no​ ​ such​ ​ token.
+#​ ​ These​ ​ need​ ​ to​ ​ be​ ​ in​ ​ a ​ ​ single​ ​ rule​ ​ to​ ​ avoid​ ​ grammar​ ​ that​ ​ is​ ​ ambiguous
+#​ ​ to​ ​ our​ ​ LL(1)​ ​ parser.​ ​ Even​ ​ though​ ​ 'test'​ ​ includes​ ​ '*expr'​ ​ in​ ​ star_expr,
+#​ ​ we​ ​ explicitly​ ​ match​ ​ '*'​ ​ here,​ ​ too,​ ​ to​ ​ give​ ​ it​ ​ proper​ ​ precedence.
+#​ ​ Illegal​ ​ combinations​ ​ and​ ​ orderings​ ​ are​ ​ blocked​ ​ in​ ​ ast.c:
+#​ ​ multiple​ ​ (test​ ​ comp_for)​ ​ arguments​ ​ are​ ​ blocked;​ ​ keyword​ ​ unpackings
+#​ ​ that​ ​ precede​ ​ iterable​ ​ unpackings​ ​ are​ ​ blocked;​ ​ etc.
+argument​ : ​ ​ ( ​ ​ test​ ​ [ ​ comp_for​ ] ​ ​ |
+test​ ​ '='​​ ​ test​ ​ |
+'**'​​ ​ test​ ​ |
+'*'​​ ​ test​ ​ )
+comp_iter​ : ​ ​ comp_for​ ​ | ​ ​ comp_if
+comp_for​ : ​ ​ [ ​ ASYNC​ ] ​ ​ 'for'​​ ​ exprlist​ ​ 'in'​​ ​ or_test​ ​ [ ​ comp_iter]
+comp_if​ : ​ ​ 'if'​​ ​ test_nocond​ ​ [ ​ comp_iter]
+#​ ​ not​ ​ used​ ​ in​ ​ grammar,​ ​ but​ ​ may​ ​ appear​ ​ in​ ​ "node"​ ​ passed​ ​ from​ ​ Parser​ ​ to
+Compiler
+encoding_decl​ : ​ ​ NAME
+yield_expr​ : ​ ​ 'yield'​​ ​ [ ​ yield_arg]
+yield_arg​ : ​ ​ 'from'​​ ​ test​ ​ | ​ ​ testlist
+
+```
