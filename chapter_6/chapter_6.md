@@ -239,7 +239,7 @@ break;
 
 1. The​​ ​value​ ​of​ ​type​ ​​is​​ ​stmt
 ```
-![](./images/first)
+![](./images/first.png)
 
 ```python
 define​​ ​VISIT_SEQ_IN_SCOPE​(​C​,​​ ​TYPE​,​​ ​SEQ​)​​ ​​{​​ ​\
@@ -276,7 +276,7 @@ case​​ ​​FunctionDef_kind:
 return​​ ​compiler_function​(​c​,​​ ​s​,​​ ​​ 0 ​);
 case​​ ​​ClassDef_kind:
 ```
-![](./images/second)
+![](./images/second.png)
 
 Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 2830&nbsp;
 
@@ -316,7 +316,7 @@ c​-&gt;​u​-&gt;​u_lineno_set​ ​​=​​ ​​0;
 c​-&gt;​u​-&gt;​u_col_offset​ ​​=​​ ​e​-&gt;​col_offset;
 switch​​ ​​(​e​-&gt;​kind​)​​ ​{
 ```
-![](./images/third)
+![](./images/third.png)
 
 Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 4337&nbsp;
 
@@ -367,7 +367,7 @@ return​​ ​​0;
 return​​ ​compiler_addop_i​(​c​,​​ ​op​,​​ ​arg​);
 ```
 We​ ​observe​ ​that​ ​the​ ​value​ ​of​ ​op​ ​is​ ​ 90 ​ ​which​ ​is​ ​the​ ​value​ ​LOAD_CONST.
-![](./images/forth)
+![](./images/forth.png)
 
 This​ ​is​ ​as​ ​we​ ​had​ ​seen​ ​at​ ​the​ ​beginning​ ​of​ ​the​ ​topic.
 
