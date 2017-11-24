@@ -2,8 +2,7 @@
 
 <h2 align="center"> Opcode ​ ​ generation </h2>
 
-Every​ ​executable​ ​instruction​ ​of​ ​the​ ​python​ ​virtual​ 
-​machine​ ​is​ ​held​ ​by​ ​the​ ​following​ ​instruction
+Every​ ​executable​ ​instruction​ ​of​ ​the​ ​python​ ​virtual​ ​machine​ ​is​ ​held​ ​by​ ​the​ ​following​ ​instruction
 structure.
 
 Listing​ ​5.1​ ​The​ ​instruction​ ​data​ ​structure
@@ -14,16 +13,13 @@ struct​​ ​instr​ ​{
 ​ ​​ ​​ ​​ ​​unsigned​​ ​i_jrel​ ​​:​​ ​​1;
 ​ ​​ ​​ ​​ ​​unsigned​​ ​​char​​ ​i_opcode;
 ​ ​​ ​​ ​​ ​​int​​ ​i_oparg;
-​ ​​ ​​ ​​ ​​struct​​ ​basicblock_​ ​​*​i_target​;​​ ​​/*​ ​target​ 
-​block​ ​(if​ ​jump​ ​instruction)​ ​*/
+​ ​​ ​​ ​​ ​​struct​​ ​basicblock_​ ​​*​i_target​;​​ ​​/*​ ​target​ block​ ​(if​ ​jump​ ​instruction)​ ​*/
 ​ ​​ ​​ ​​ ​​int​​ ​i_lineno;
 };
 ```
-Let​ ​us​ ​understand​ ​the​ ​different​ ​ways​ ​opcodes​ ​are​ ​added​ 
-​to​ ​the​ ​generated​ ​code​ ​object.
+Let​ ​us​ ​understand​ ​the​ ​different​ ​ways​ ​opcodes​ ​are​ ​added​ ​to​ ​the​ ​generated​ ​code​ ​object.
 
-Opcode​ ​generation​ ​for​ ​instructions​ ​without​ ​arguments​ 
-​compile.c​ ​line​ ​no​ ​1092.
+Opcode​ ​generation​ ​for​ ​instructions​ ​without​ ​arguments​ compile.c​ ​line​ ​no​ ​1092.
 
 Listing​​ ​​5.2
 
@@ -37,8 +33,7 @@ compiler_addop​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int
 ​ ​​ ​​ ​​ ​​struct​​ ​instr​ ​​*​i;
 ​ ​​ ​​ ​​ ​​int​​ ​off;
 ​ ​​ ​​ ​​ ​​assert​(!​HAS_ARG​(​opcode​));
-​ ​​ ​​ ​​ ​off​ ​​=​​ ​compiler_next_instr​(​c​,​​ 
-​c​-&gt;​u​-&gt;​u_curblock​);
+​ ​​ ​​ ​​ ​off​ ​​=​​ ​compiler_next_instr​(​c​,​​ ​c​-&gt;​u​-&gt;​u_curblock​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(​off​ ​​&lt;​​ ​​0)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​0;
 ​ ​​ ​​ ​​ ​b​ ​​=​​ ​c​-&gt;​u​-&gt;​u_curblock;
@@ -61,8 +56,7 @@ Example:
 ```python
 ADDOP​(​c​,​​ ​YIELD_VALUE​);
 ```
-Opcode​​ ​generation​ ​​for​​ ​instructions​ ​​with​​ ​arguments​ 
-​compile​.​c​ ​line​ ​​no​​ ​​1092.
+Opcode​​ ​generation​ ​​for​​ ​instructions​ ​​with​​ ​arguments​ ​compile​.​c​ ​line​ ​​no​​ ​​1092.
 
 Listing​​ ​​5.3
 
@@ -70,32 +64,23 @@ Compile.c​ ​line​ ​no​ ​ 1147
 
 ```python
 static​​ ​​int
-compiler_addop_o​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int​​ ​opcode​,​​ 
-​​PyObject​​ ​​*​dict,
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ 
-​​PyObject​​ ​​*​o)
+compiler_addop_o​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int​​ ​opcode​,​​ PyObject​​ ​​*​dict, ​​PyObject​​ ​​*​o)
 {
-​ ​​ ​​ ​​ ​​Py_ssize_t​​ ​arg​ ​​=​​ ​compiler_add_o​(​c​,​​ ​dict​,​​ 
-​o​);
+​ ​​ ​​ ​​ ​​Py_ssize_t​​ ​arg​ ​​=​​ ​compiler_add_o​(​c​,​​ ​dict​,​​ ​o​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(​arg​ ​​&lt;​​ ​​0)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​0;
 ​ ​​ ​​ ​​ ​​return​​ ​compiler_addop_i​(​c​,​​ ​opcode​,​​ ​arg​);
 }
-```
-```python
+
 static​​ ​​Py_ssize_t
 compiler_add_o​(​struct​​ ​compiler​ ​​*​c​,​​ ​​PyObject​​ ​​*​dict​,​​
  ​​PyObject​​ ​​*​o)
 {
 ​ ​​ ​​ ​​ ​​PyObject​​ ​​*​t​,​​ ​​*​v;
 ​ ​​ ​​ ​​ ​​Py_ssize_t​​ ​arg;
-```
-```python
 ​ ​​ ​​ ​​ ​t​ ​​=​​ ​​_PyCode_ConstantKey​(​o​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(​t​ ​​==​​ ​NULL)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​-​1;
-```
-```python
 ​ ​​ ​​ ​​ ​v​ ​​=​​ ​​PyDict_GetItem​(​dict​,​​ ​t​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(!​v​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​if​​ ​​(​PyErr_Occurred​())​​ ​{
@@ -103,21 +88,16 @@ compiler_add_o​(​struct​​ ​compiler​ ​​*​c​,​​ ​​PyO
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​-​1;
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​}
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​arg​ ​​=​​ ​​PyDict_Size​(​dict​);
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​v​ ​​=​​ ​​PyLong_FromSsize_t​(​arg​);​​ ​​ ​​ 
-​​ ​​//​ ​ 1
+​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​v​ ​​=​​ ​​PyLong_FromSsize_t​(​arg​);​​ ​​ ​​ ​ ​​//​ ​ 1
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​if​​ ​​(!​v​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Py_DECREF​(​t​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​-​1;
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​}
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​if​​ ​​(​PyDict_SetItem​(​dict​,​​ ​t​,​​ 
-​v​)​​ ​​&lt;​​ ​​ 0 ​)​​ ​{
+​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​if​​ ​​(​PyDict_SetItem​(​dict​,​​ ​t​,​​ ​v​)​​ ​​&lt;​​ ​​ 0 ​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Py_DECREF​(​t​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Py_DECREF​(​v​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​-​1;
  ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​}
-```
-
-```python
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Py_DECREF​(​v​);
 ​ ​​ ​​ ​​ ​}
 ​ ​​ ​​ ​​ ​​else
@@ -125,58 +105,36 @@ compiler_add_o​(​struct​​ ​compiler​ ​​*​c​,​​ ​​PyO
 ​ ​​ ​​ ​​ ​​Py_DECREF​(​t​);
 ​ ​​ ​​ ​​ ​​return​​ ​arg;
 }
-```
-```python
 static​​ ​​int
-compiler_addop_i​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int​​ ​opcode​,​​ 
-​​Py_ssize_t​​ ​oparg)
+compiler_addop_i​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int​​ ​opcode​,​​ Py_ssize_t​​ ​oparg)
 {
 ​ ​​ ​​ ​​ ​​struct​​ ​instr​ ​​*​i;
 ​ ​​ ​​ ​​ ​​int​​ ​off;
-```
-```python
 ​ ​​ ​​ ​​ ​​/*​ ​oparg​ ​value​ ​is​ ​unsigned,​ ​but​ ​a​ ​signed​ ​C​
  ​int​ ​is​ ​usually​ ​used​ ​to​ ​store
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​it​ ​​in​​ ​the​ ​C​ ​code​ ​​(​like​ 
-​​Python​/​ceval​.​c​).
-```
-```python
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Limit​​ ​to​ ​​ 32 ​-​bit​ ​​signed​​ ​C​ ​​int​​ 
-​​(​rather​ ​than​ ​INT_MAX​)​​ ​​for​​ ​portability.
-```
-```python
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​​The​​ ​argument​ ​of​ ​a​ ​concrete​ ​bytecode​ 
-​instruction​ ​​is​​ ​limited​ ​to​ ​​ 8 ​-​bit.
-​ ​​ ​​ ​​ ​​ ​​ ​​ ​EXTENDED_ARG​ ​​is​​ ​used​ ​​for​​ ​​ 16 ​,​​ ​​ 
-24 ​,​​ ​​and​​ ​​ 32 ​-​bit​ ​arguments​.​​ ​​*/
+​ ​​ ​​ ​​ ​​ ​​ ​​ ​it​ ​​in​​ ​the​ ​C​ ​code​ ​​(​like​ ​​Python​/​ceval​.​c​).
+​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Limit​​ ​to​ ​​ 32 ​-​bit​ ​​signed​​ ​C​ ​​int​​ ​​(​rather​ ​than​ ​INT_MAX​)​​ ​​for​​ ​portability.
+​ ​​ ​​ ​​ ​​ ​​ ​​ ​​The​​ ​argument​ ​of​ ​a​ ​concrete​ ​bytecode​ ​instruction​ ​​is​​ ​limited​ ​to​ ​​ 8 ​-​bit.
+​ ​​ ​​ ​​ ​​ ​​ ​​ ​EXTENDED_ARG​ ​​is​​ ​used​ ​​for​​ ​​ 16 ​,​​ ​​ 24 ​,​​ ​​and​​ ​​ 32 ​-​bit​ ​arguments​.​​ ​​*/
 ​ ​​ ​​ ​​ ​​assert​(​HAS_ARG​(​opcode​));
-​ ​​ ​​ ​​ ​​assert​(​ 0 ​​ ​​&lt;=​​ ​oparg​ ​​&amp;&amp;​​ ​oparg​ 
-​​&lt;=​​ ​​ 2147483647 ​);
-```
-```python
-​ ​​ ​​ ​​ ​off​ ​​=​​ ​compiler_next_instr​(​c​,​​ 
-​c​-&gt;​u​-&gt;​u_curblock​);
+​ ​​ ​​ ​​ ​​assert​(​ 0 ​​ ​​&lt;=​​ ​oparg​ ​​&amp;&amp;​​ ​oparg​ ​​&lt;=​​ ​​ 2147483647 ​);
+​ ​​ ​​ ​​ ​off​ ​​=​​ ​compiler_next_instr​(​c​,​​ c​-&gt;​u​-&gt;​u_curblock​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(​off​ ​​&lt;​​ ​​0)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​0;
-​ ​​ ​​ ​​ ​i​ ​​=​​ 
-​​&amp;​c​-&gt;​u​-&gt;​u_curblock​-&gt;​b_instr​[​off​];
+​ ​​ ​​ ​​ ​i​ ​​=​​ ​​&amp;​c​-&gt;​u​-&gt;​u_curblock​-&gt;​b_instr​[​off​];
 ​ ​​ ​​ ​​ ​i​-&gt;​i_opcode​ ​​=​​ ​opcode;
-​ ​​ ​​ ​​ ​i​-&gt;​i_oparg​ ​​=​​ ​​Py_SAFE_DOWNCAST​(​oparg​,​​ 
-​​Py_ssize_t​,​​ ​​int​);​​ ​​ ​​//​ ​ 2
+​ ​​ ​​ ​​ ​i​-&gt;​i_oparg​ ​​=​​ ​​Py_SAFE_DOWNCAST​(​oparg​,​​ ​​Py_ssize_t​,​​ ​​int​);​​ ​​ ​​//​ ​ 2
 ​ ​​ ​​ ​​ ​compiler_set_lineno​(​c​,​​ ​off​);
 ​ ​​ ​​ ​​ ​​return​​ ​​1;
 }
 ```
 Observations​ ​from​ ​Listing​ ​5.3
 
-1. The​ ​current​ ​size​ ​is​ ​stored​ ​as​ ​the​ ​value​ ​of​ ​the​ 
-​dictionary.
-2. The​ ​value​ ​is​ ​set​ ​as​ ​the​ ​argument​ ​of​ ​the​ 
-​instruction.
+1. The​ ​current​ ​size​ ​is​ ​stored​ ​as​ ​the​ ​value​ ​of​ ​the​ ​dictionary.
+2. The​ ​value​ ​is​ ​set​ ​as​ ​the​ ​argument​ ​of​ ​the​ ​instruction.
 
 ```python
-ADDOP_O​(​c​,​​ ​LOAD_CONST​,​​ ​s​-&gt;​v​.​ClassDef​.​name​,​​ 
-​consts​);
+ADDOP_O​(​c​,​​ ​LOAD_CONST​,​​ ​s​-&gt;​v​.​ClassDef​.​name​,​​ ​consts​);
 ```
 Listing​ ​5.4​ ​Generation​ ​of​ ​opcodes​ ​for​ ​jump​ ​offsets
 
@@ -185,22 +143,17 @@ compile.c​ ​line​ ​no​ ​ 1201&nbsp;
 
 ```python
 static​​ ​​int
-compiler_addop_j​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int​​ ​opcode​,​​ 
-​basicblock​ ​​*​b​,​​ ​​int
+compiler_addop_j​(​struct​​ ​compiler​ ​​*​c​,​​ ​​int​​ ​opcode​,​​ ​basicblock​ ​​*​b​,​​ ​​int
 absolute)
 {
 ​ ​​ ​​ ​​ ​​struct​​ ​instr​ ​​*​i;
 ​ ​​ ​​ ​​ ​​int​​ ​off;
-```
-```python
 ​ ​​ ​​ ​​ ​​assert​(​HAS_ARG​(​opcode​));
 ​ ​​ ​​ ​​ ​​assert​(​b​ ​​!=​​ ​NULL​);
-​ ​​ ​​ ​​ ​off​ ​​=​​ ​compiler_next_instr​(​c​,​​ 
-​c​-&gt;​u​-&gt;​u_curblock​);
+​ ​​ ​​ ​​ ​off​ ​​=​​ ​compiler_next_instr​(​c​,​​ ​c​-&gt;​u​-&gt;​u_curblock​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(​off​ ​​&lt;​​ ​​0)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​0;
-​ ​​ ​​ ​​ ​i​ ​​=​​ 
-​​&amp;​c​-&gt;​u​-&gt;​u_curblock​-&gt;​b_instr​[​off​];
+​ ​​ ​​ ​​ ​i​ ​​=​​ ​​&amp;​c​-&gt;​u​-&gt;​u_curblock​-&gt;​b_instr​[​off​];
 ​ ​​ ​​ ​​ ​i​-&gt;​i_opcode​ ​​=​​ ​opcode;
 ​ ​​ ​​ ​​ ​i​-&gt;​i_target​ ​​=​​ ​b​;​​ ​​ ​​ ​​ ​​ ​​ ​​//​ ​ 1
 ​ ​​ ​​ ​​ ​​if​​ ​​(​absolute)
@@ -215,8 +168,7 @@ absolute)
 Observations​ ​from​ ​listing​ ​5.4
 
 1. The​ ​target​ ​to​ ​jump​ ​is​ ​set
-2. The​ ​flags​ ​to​ ​be​ ​used​ ​at​ ​runtime​ ​whether​ ​the​ ​jump​ 
-​is​ ​relative​ ​or​ ​absolute​ ​is​ ​set
+2. The​ ​flags​ ​to​ ​be​ ​used​ ​at​ ​runtime​ ​whether​ ​the​ ​jump​ ​is​ ​relative​ ​or​ ​absolute​ ​is​ ​set
 
 Example:
 
@@ -227,61 +179,43 @@ static​​ ​​int
 compiler_ifexp​(​struct​​ ​compiler​ ​​*​c​,​​ ​expr_ty​ ​e)
 {
 ​ ​​ ​​ ​​ ​basicblock​ ​​*​end​,​​ ​​*​next;
-```
-```python
 ​ ​​ ​​ ​​ ​​assert​(​e​-&gt;​kind​ ​​==​​ ​​IfExp_kind​);
 ​ ​​ ​​ ​​ ​​end​​ ​​=​​ ​compiler_new_block​(​c​);
 ​ ​​ ​​ ​​ ​​if​​ ​​(​end​​ ​​==​​ ​NULL)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​0;
 ​ ​​ ​​ ​​ ​​next​​ ​​=​​ ​compiler_new_block​(​c​);
-```
-
-```python
 ​ ​​ ​​ ​​ ​​if​​ ​​(​next​​ ​​==​​ ​NULL)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​return​​ ​​0;
 ​ ​​ ​​ ​​ ​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​test​);​​ ​​ ​​
  ​​ ​​ ​​ ​​ ​​ ​​//​ ​​ ​​ ​​ ​1.
 ​ ​​ ​​ ​​ ​ADDOP_JABS​(​c​,​​ ​POP_JUMP_IF_FALSE​,​​ ​​next​);​​ ​​//
-​ ​​ ​​ ​​ ​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​body​);​​ ​​ ​​
- ​​ ​​ ​​ ​​ ​​ ​​//
-​ ​​ ​​ ​​ ​ADDOP_JREL​(​c​,​​ ​JUMP_FORWARD​,​​ ​​end​);​​ ​​ ​​ ​​ ​​ 
-​​ ​​ ​​//​ ​​ ​​ ​​ ​​ ​2.
-​ ​​ ​​ ​​ ​compiler_use_next_block​(​c​,​​ ​​next​);​​ ​​ ​​ ​​ ​​ ​​ 
-​​ ​​//
-​ ​​ ​​ ​​ ​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​orelse​);​​ ​​ 
-​​ ​​ ​​ ​​ ​​//​ ​​ ​​ ​​ ​​ ​3.
-​ ​​ ​​ ​​ ​compiler_use_next_block​(​c​,​​ ​​end​);​​ ​​ ​​ ​​ ​​ ​​ ​​
- ​​ ​​//​ ​​ ​​ ​​ ​​ ​4.
+​ ​​ ​​ ​​ ​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​body​);​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​//
+​ ​​ ​​ ​​ ​ADDOP_JREL​(​c​,​​ ​JUMP_FORWARD​,​​ ​​end​);​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​//​ ​​ ​​ ​​ ​​ ​2.
+​ ​​ ​​ ​​ ​compiler_use_next_block​(​c​,​​ ​​next​);​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​//
+​ ​​ ​​ ​​ ​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​orelse​);​​ ​​ ​​ ​​ ​​ ​​ ​​//​ ​​ ​​ ​​ ​​ ​3.
+​ ​​ ​​ ​​ ​compiler_use_next_block​(​c​,​​ ​​end​);​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​//​ ​​ ​​ ​​ ​​ ​4.
 ​ ​​ ​​ ​​ ​​return​​ ​​1;
 }
 ```
-This​ ​example​ ​clearly​ ​illustrates​ ​the​ ​development​ ​of​ ​a​ 
-​if​ ​block​ ​of​ ​code.
+This​ ​example​ ​clearly​ ​illustrates​ ​the​ ​development​ ​of​ ​a​ if​ ​block​ ​of​ ​code.
 
-1. There​ ​are​ ​ 3 ​ ​blocks​ ​of​ ​code​ ​to​ ​be​ ​used​ ​while​ 
-​code​ ​generation​ ​of​ ​a​ ​if​ ​statement.
-2. The​ ​current​ ​block​ ​which​ ​is​ ​used​ ​to​ ​test​ ​the​ 
-​condition​ ​which​ ​is​ ​an​ ​extension​ ​of​ ​the
+1. There​ ​are​ ​ 3 ​ ​blocks​ ​of​ ​code​ ​to​ ​be​ ​used​ ​while​ ​code​ ​generation​ ​of​ ​a​ ​if​ ​statement.
+2. The​ ​current​ ​block​ ​which​ ​is​ ​used​ ​to​ ​test​ ​the​ ​condition​ ​which​ ​is​ ​an​ ​extension​ ​of​ ​the
     previous​ ​block​ ​used​ ​by​ ​the​ ​compiler.
-3. The​ ​next​ ​block​ ​contains​ ​the​ ​code​ ​for​ ​the​ ​conditions​ 
-​which​ ​fail​ ​and​ ​hence​ ​an​ ​absolution
+3. The​ ​next​ ​block​ ​contains​ ​the​ ​code​ ​for​ ​the​ ​conditions​ ​which​ ​fail​ ​and​ ​hence​ ​an​ ​absolution
     jump​ ​to​ ​the​ ​next​ ​block
-4. The​ ​generation​ ​of​ ​the​ ​code​ ​for​ ​the​ ​true​ ​condition​ 
-​​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​body​);
+4. The​ ​generation​ ​of​ ​the​ ​code​ ​for​ ​the​ ​true​ ​condition​ ​​VISIT​(​c​,​​ ​expr​,​​ ​e​-&gt;​v​.​IfExp​.​body​);
     happens​ ​in​ ​the​ ​current​ ​block.
-5. Finally​ ​a​ ​jump​ ​to​ ​the​ ​“end”​ ​block​ ​which​ ​contains​ 
-​the​ ​other​ ​part​ ​of​ ​the​ ​code.
+5. Finally​ ​a​ ​jump​ ​to​ ​the​ ​“end”​ ​block​ ​which​ ​contains​ ​the​ ​other​ ​part​ ​of​ ​the​ ​code.
 6. Compile​ ​the​ ​code​ ​for​ ​the​ ​other​ ​else​ ​cases.
-7. Finally​ ​pass​ ​the​ ​end​ ​block​ ​for​ ​the​ ​generation​ ​of​ 
-​the​ ​other​ ​code​ ​for​ ​the​ ​next​ ​code
+7. Finally​ ​pass​ ​the​ ​end​ ​block​ ​for​ ​the​ ​generation​ ​of​ ​the​ ​other​ ​code​ ​for​ ​the​ ​next​ ​code
     generation.
 
 ## Topic ​ ​ 5.2 ​ ​ Example ​ ​ of ​ ​ opcode ​ ​ generation
 
 Listing​ ​5.5
 
-Let​ ​us​ ​start​ ​from​ ​a​ ​simple​ ​example​ ​the​ ​rest​ ​of​ ​the​ 
-​examples​ ​are​ ​available​ ​in​ ​the​ ​respective
+Let​ ​us​ ​start​ ​from​ ​a​ ​simple​ ​example​ ​the​ ​rest​ ​of​ ​the​ ​examples​ ​are​ ​available​ ​in​ ​the​ ​respective
 chapters.
 
 ```python
@@ -292,8 +226,7 @@ opcode
 ```
 Debugging​ ​session
 
-Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 1493 ​ ​in​ ​the​ ​file​ 
-​compile.c
+Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 1493 ​ ​in​ ​the​ ​file​ ​compile.c
 
 ```python
 ​ ​​case​​ ​​Interactive_kind:
@@ -314,10 +247,8 @@ define​​ ​VISIT_SEQ_IN_SCOPE​(​C​,​​ ​TYPE​,​​ ​SEQ​
 int​​ ​_i​;​​ ​\
 asdl_seq​ ​​*​seq​ ​​=​​ ​​(​SEQ​);​​ ​​/*​ ​avoid​ ​variable​ ​capture​
  ​*/​​ ​\
-for​​ ​​(​_i​ ​​=​​ ​​ 0 ​;​​ ​_i​ ​​&lt;​​ ​asdl_seq_LEN​(​seq​);​​ 
-​_i​++)​​ ​​{​​ ​\
-TYPE​ ​​##​ ​_ty​ ​elt​ ​=​ ​(TYPE​ ​##​ ​_ty)asdl_seq_GET(seq,​ ​_i);​ 
-​\
+for​​ ​​(​_i​ ​​=​​ ​​ 0 ​;​​ ​_i​ ​​&lt;​​ ​asdl_seq_LEN​(​seq​);​​ ​_i​++)​​ ​​{​​ ​\
+TYPE​ ​​##​ ​_ty​ ​elt​ ​=​ ​(TYPE​ ​##​ ​_ty)asdl_seq_GET(seq,​ ​_i);​ ​\
 if​​ ​​(!​compiler_visit_​ ​​##​ ​TYPE((C),​ ​elt))​ ​{​ ​\
 compiler_exit_scope​(​c​);​​ ​\
 return​​ ​​ 0 ​;​​ ​\
@@ -326,8 +257,7 @@ return​​ ​​ 0 ​;​​ ​\
 }
 ```
 
-It​ ​internally​ ​calls​ ​the​ ​function​ ​compiler_visit_stmt​ ​for​ 
-​element​ ​in​ ​the​ ​asdl_seq​ ​which​ ​is
+It​ ​internally​ ​calls​ ​the​ ​function​ ​compiler_visit_stmt​ ​for​ ​element​ ​in​ ​the​ ​asdl_seq​ ​which​ ​is
 mod​-&gt;​v​.​Interactive​.​body.
 
 Let​ ​us​ ​insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 2809&nbsp;
@@ -337,15 +267,11 @@ static​​ ​​int
 compiler_visit_stmt​(​struct​​ ​compiler​ ​​*​c​,​​ ​stmt_ty​ ​s)
 {
 Py_ssize_t​​ ​i​,​​ ​n;
-```
-```python
 /*​ ​Always​ ​assign​ ​a​ ​lineno​ ​to​ ​the​ ​next​ ​instruction​ ​for​
  ​a​ ​stmt.​ ​*/
 c​-&gt;​u​-&gt;​u_lineno​ ​​=​​ ​s​-&gt;​lineno;
 c​-&gt;​u​-&gt;​u_col_offset​ ​​=​​ ​s​-&gt;​col_offset;
 c​-&gt;​u​-&gt;​u_lineno_set​ ​​=​​ ​​0;
-```
-```python
 switch​​ ​​(​s​-&gt;​kind​)​​ ​{
 case​​ ​​FunctionDef_kind:
 return​​ ​compiler_function​(​c​,​​ ​s​,​​ ​​ 0 ​);
@@ -358,20 +284,17 @@ Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 2830&nbsp;
 ```python
 case​​ ​​Assign_kind:
 n​ ​​=​​ ​asdl_seq_LEN​(​s​-&gt;​v​.​Assign​.​targets​);​​ ​​//​ ​ 1
-VISIT​(​c​,​​ ​expr​,​​ ​s​-&gt;​v​.​Assign​.​value​);​​ ​​ ​​ ​​ ​​ 
-​​//​ ​ 2
+VISIT​(​c​,​​ ​expr​,​​ ​s​-&gt;​v​.​Assign​.​value​);​​ ​​ ​​ ​​ ​​ ​​//​ ​ 2
 for​​ ​​(​i​ ​​=​​ ​​ 0 ​;​​ ​i​ ​​&lt;​​ ​n​;​​ ​i​++)​​ ​{
 if​​ ​​(​i​ ​​&lt;​​ ​n​ ​​-​​ ​​1)
 ADDOP​(​c​,​​ ​DUP_TOP​);​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​//​
  ​ 3
 VISIT​(​c​,​​ ​expr,
-(​expr_ty​)​asdl_seq_GET​(​s​-&gt;​v​.​Assign​.​targets​,​​ ​i​));​​ 
-​​//​ ​ 4
+(​expr_ty​)​asdl_seq_GET​(​s​-&gt;​v​.​Assign​.​targets​,​​ ​i​));​​ ​​//​ ​ 4
 }
 break​;
 ```
-1. Value​​ ​of​ ​n​ ​​=​​ ​​ 1 ​​ ​because​ ​the​ ​targets​ ​to​ 
-​assign​ ​are​ ​just​ ​​ 1 ​​ ​which​ ​​is​​ ​a.
+1. Value​​ ​of​ ​n​ ​​=​​ ​​ 1 ​​ ​because​ ​the​ ​targets​ ​to​ ​assign​ ​are​ ​just​ ​​ 1 ​​ ​which​ ​​is​​ ​a.
 2. We​​ ​shall​ ​see​ ​​in​​ ​the​ ​​next​​ ​section.
 3. We​​ ​shall​ ​see​ ​​in​​ ​the​ ​​next​​ ​section.
 4. We​​ ​shall​ ​see​ ​​in​​ ​the​ ​​next​​ ​section.
@@ -384,8 +307,7 @@ Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 4266&nbsp;
 static​​ ​​int
 compiler_visit_expr​(​struct​​ ​compiler​ ​​*​c​,​​ ​expr_ty​ ​e)
 {
-/*​ ​If​ ​expr​ ​e​ ​has​ ​a​ ​different​ ​line​ ​number​ ​than​ ​the​ 
-​last​ ​expr/stmt,
+/*​ ​If​ ​expr​ ​e​ ​has​ ​a​ ​different​ ​line​ ​number​ ​than​ ​the​ ​last​ ​expr/stmt,
 set​​ ​a​ ​​new​​ ​line​ ​number​ ​​for​​ ​the​ ​​next​​ ​instruction.
 */
 if​​ ​​(​e​-&gt;​lineno​ ​​&gt;​​ ​c​-&gt;​u​-&gt;​u_lineno​)​​ ​{
@@ -406,8 +328,7 @@ ADDOP_O​(​c​,​​ ​LOAD_CONST​,​​ ​e​-&gt;​v​.​Num​.
  ​​//​ ​ 1
 break;
 ```
-1. We​​ ​observe​ ​that​ ​LOAD_CONST​ ​​is​​ ​added​ ​​as​​ ​the​ 
-​opcode
+1. We​​ ​observe​ ​that​ ​LOAD_CONST​ ​​is​​ ​added​ ​​as​​ ​the​ ​opcode
 
 Observation​ ​ 3&nbsp;&nbsp;
 
@@ -418,21 +339,14 @@ Py_INCREF​(​value​);
 PUSH​(​value​);
 FAST_DISPATCH​();
 }
-```
-```python
 TARGET​(​DUP_TOP​)​​ ​{
 PyObject​​ ​​*​top​ ​​=​​ ​TOP​();
 Py_INCREF​(​top​);
 PUSH​(​top​);
 FAST_DISPATCH​();
 }
-```
-
-```python
-The​​ ​top​ ​of​ ​the​ ​stack​ ​which​ ​​is​​ ​the​ ​​last​​ ​constant​ 
-​​from​​ ​LOAD_CONST​ ​​is​​ ​added​ ​to
-the​ ​stack​ ​multiple​ ​times​ ​​as​​ ​many​ ​​as​​ ​the​ ​​no​​ ​of​ 
-​variable​ ​targets​ ​​in​​ ​the
+The​​ ​top​ ​of​ ​the​ ​stack​ ​which​ ​​is​​ ​the​ ​​last​​ ​constant​ ​​from​​ ​LOAD_CONST​ ​​is​​ ​added​ ​to
+the​ ​stack​ ​multiple​ ​times​ ​​as​​ ​many​ ​​as​​ ​the​ ​​no​​ ​of​ ​variable​ ​targets​ ​​in​​ ​the
 statement.
 ```
 Observation​ ​ 4&nbsp;&nbsp;
@@ -441,8 +355,7 @@ Insert​ ​the​ ​same​ ​breakpoint​ ​on​ ​line​ ​no​ ​
 
 ```python
 case​​ ​​Name_kind:
-return​​ ​compiler_nameop​(​c​,​​ ​e​-&gt;​v​.​Name​.​id​,​​ 
-​e​-&gt;​v​.​Name​.​ctx​);
+return​​ ​compiler_nameop​(​c​,​​ ​e​-&gt;​v​.​Name​.​id​,​​ ​e​-&gt;​v​.​Name​.​ctx​);
 ```
 Insert​ ​a​ ​breakpoint​ ​on​ ​line​ ​no​ ​ 3141 ​ ​in​ ​the​ ​function​
  ​compiler_nameop
@@ -455,12 +368,10 @@ if​​ ​​(​arg​ ​​&lt;​​ ​​0)
 return​​ ​​0;
 return​​ ​compiler_addop_i​(​c​,​​ ​op​,​​ ​arg​);
 ```
-We​ ​observe​ ​that​ ​the​ ​value​ ​of​ ​op​ ​is​ ​ 90 ​ ​which​ ​is​ 
-​the​ ​value​ ​LOAD_CONST.
+We​ ​observe​ ​that​ ​the​ ​value​ ​of​ ​op​ ​is​ ​ 90 ​ ​which​ ​is​ ​the​ ​value​ ​LOAD_CONST.
 ![](./images/forth)
 
-This​ ​is​ ​as​ ​we​ ​had​ ​seen​ ​at​ ​the​ ​beginning​ ​of​ ​the​ 
-​topic.
+This​ ​is​ ​as​ ​we​ ​had​ ​seen​ ​at​ ​the​ ​beginning​ ​of​ ​the​ ​topic.
 
 ## Topic ​ ​ 5.3 ​ ​ Opcodes ​ ​ of ​ ​ python ​ ​ 3.6
 
@@ -473,8 +384,6 @@ Defined​ ​in​ ​the​ ​file​ ​opcode.h
 #ifdef​​ ​__cplusplus
 extern​​ ​​"C"​​ ​{
 #endif
-```
-```python
 /*​ ​Instruction​ ​opcodes​ ​for​ ​compiled​ ​code​ ​*/
 #define​​ ​POP_TOP 1
 #define​​ ​ROT_TWO 2
@@ -507,8 +416,6 @@ extern​​ ​​"C"​​ ​{
 #define​​ ​INPLACE_MODULO 59
 #define​​ ​STORE_SUBSCR 60
 #define​​ ​DELETE_SUBSCR 61
-```
-```python
 #define​​ ​BINARY_LSHIFT 62
 #define​​ ​BINARY_RSHIFT 63
 #define​​ ​BINARY_AND 64
@@ -556,8 +463,6 @@ extern​​ ​​"C"​​ ​{
 #define​​ ​COMPARE_OP 107
 #define​​ ​IMPORT_NAME 108
 #define​​ ​IMPORT_FROM 109
-
-
 #define​​ ​JUMP_FORWARD 110
 #define​​ ​JUMP_IF_FALSE_OR_POP 111
 #define​​ ​JUMP_IF_TRUE_OR_POP 112
@@ -601,32 +506,18 @@ extern​​ ​​"C"​​ ​{
 #define​​ ​BUILD_TUPLE_UNPACK_WITH_CALL​ ​​ 158
 
 
-/*​ ​EXCEPT_HANDLER​ ​is​ ​a​ ​special,​ ​implicit​ ​block​ ​type​ 
-​which​ ​is​ ​created​ ​when
-​ ​​ ​​ ​entering​ ​an​ ​​except​​ ​handler​.​​ ​​It​​ ​​is​​ ​​not​​ 
-​an​ ​opcode​ ​but​ ​we​ ​define​ ​it​ ​here
-​ ​​ ​​ ​​as​​ ​we​ ​want​ ​it​ ​to​ ​be​ ​available​ ​to​ ​both​ 
-​frameobject​.​c​ ​​and​​ ​ceval​.​c​,​​ ​​while
+/*​ ​EXCEPT_HANDLER​ ​is​ ​a​ ​special,​ ​implicit​ ​block​ ​type​ ​which​ ​is​ ​created​ ​when
+​ ​​ ​​ ​entering​ ​an​ ​​except​​ ​handler​.​​ ​​It​​ ​​is​​ ​​not​​ ​an​ ​opcode​ ​but​ ​we​ ​define​ ​it​ ​here
+​ ​​ ​​ ​​as​​ ​we​ ​want​ ​it​ ​to​ ​be​ ​available​ ​to​ ​both​ ​frameobject​.​c​ ​​and​​ ​ceval​.​c​,​​ ​​while
 ​ ​​ ​​ ​remaining​ ​​private​.*/
 #define​​ ​EXCEPT_HANDLER​ ​​ 257
 
 
-enum​​ ​cmp_op​ ​​{​PyCmp_LT​=​Py_LT​,​​ ​​PyCmp_LE​=​Py_LE​,​​ 
-​​PyCmp_EQ​=​Py_EQ​,
-PyCmp_NE​=​Py_NE,
-PyCmp_GT​=​Py_GT​,​​ ​​PyCmp_GE​=​Py_GE​,​​ ​​PyCmp_IN​,​​ 
-​​PyCmp_NOT_IN,
-PyCmp_IS​,​​ ​​PyCmp_IS_NOT​,​​ ​​PyCmp_EXC_MATCH​,​​ ​​PyCmp_BAD​};
-```
-```python
+enum​​ ​cmp_op​ ​​{​PyCmp_LT​=​Py_LT​,​​ ​​PyCmp_LE​=​Py_LE​,​​ ​​PyCmp_EQ​=​Py_EQ​, PyCmp_NE​=​Py_NE, PyCmp_GT​=​Py_GT​,​​ ​​PyCmp_GE​=​Py_GE​,​​ ​​PyCmp_IN​,​​ ​​PyCmp_NOT_IN, PyCmp_IS​,​​ ​​PyCmp_IS_NOT​, PyCmp_EXC_MATCH​,​​ ​​PyCmp_BAD​};
 #define​​ ​HAS_ARG​(​op​)​​ ​​((​op​)​​ ​​&gt;=​​ ​HAVE_ARGUMENT)
-```
-```python
 #ifdef​​ ​__cplusplus
 }
 #endif
 #endif​​ ​​/*​ ​!Py_OPCODE_H​ ​*/
 ```
-We​ ​shall​ ​understand​ ​the​ ​implementation​ ​of​ ​these​ ​opcodes​ 
-​in​ ​the​ ​coming​ ​chapters.
-
+We​ ​shall​ ​understand​ ​the​ ​implementation​ ​of​ ​these​ ​opcodes​ ​in​ ​the​ ​coming​ ​chapters.
