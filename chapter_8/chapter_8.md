@@ -1,6 +1,6 @@
 <h1 align="center"> Chapter​ ​ 8 </h1>
 <h2 align="center"> Internals​ ​ of​ ​ the​ ​ interpreter </h2>
-**Let​ ​ us​ ​ understand​ ​ the​ ​ structure​ ​ that​ ​ stores​ ​ the​ ​ global​ ​ state​ ​ of​ ​ the​ ​ interpreter**
+Let​ ​ us​ ​ understand​ ​ the​ ​ structure​ ​ that​ ​ stores​ ​ the​ ​ global​ ​ state​ ​ of​ ​ the​ ​ interpreter
 
 ```c
 typedef​​ ​​struct​​ ​_is​ ​{
