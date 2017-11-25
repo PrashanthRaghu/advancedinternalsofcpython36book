@@ -1,8 +1,8 @@
 <h1 align="center"> Chapter​ ​ 8 </h1>
 <h2 align="center"> Internals​ ​ of​ ​ the​ ​ interpreter </h2>
-#### Let​ ​ us​ ​ understand​ ​ the​ ​ structure​ ​ that​ ​ stores​ ​ the​ ​ global​ ​ state​ ​ of​ ​ the​ ​ interpreter
+**Let​ ​ us​ ​ understand​ ​ the​ ​ structure​ ​ that​ ​ stores​ ​ the​ ​ global​ ​ state​ ​ of​ ​ the​ ​ interpreter**
 
-```
+```c
 typedef​​ ​​struct​​ ​_is​ ​{
 ​ ​​ ​​ ​​ ​​struct​​ ​_is​ ​​*​next​;​​ ​​//​ ​ 1
 ​ ​​ ​​ ​​ ​​struct​​ ​_ts​ ​​*​tstate_head​;​​ ​​//​ ​ 2
@@ -29,7 +29,7 @@ typedef​​ ​​struct​​ ​_is​ ​{
 
 **2. The interpreter state is initialized by the function PyInterpreterState_New in the file pystate.c line no 69**
 
-```
+```c
 PyInterpreterState​​ ​*
 PyInterpreterState_New​(​void)
 {
@@ -73,9 +73,9 @@ PyInterpreterState_New​(​void)
 ```
 **Topic GIL and the interpreter** 
 
-**Implementation of the GIL details from ceval_gil.h.**
+**Implementation of the GIL details from ceval_gil.h**
 
-```
+```c
 ​ ​/*​ ​​ ​​Notes​​ ​about​ ​the​ ​implementation:
 ​ ​​ ​​ ​​-​​ ​​The​​ ​GIL​ ​​is​​ ​just​ ​a​ ​​boolean​​ ​variable​ ​​(​gil_locked​)​​ ​whose​ ​access​ ​​is protected
 ​ ​​ ​​ ​​ ​​ ​​by​​ ​a​ ​mutex​ ​​(​gil_mutex​),​​ ​​and​​ ​whose​ ​changes​ ​are​ ​signalled​ ​​by​​ a​ ​condition
@@ -117,18 +117,18 @@ PyInterpreterState_New​(​void)
 */
 ```
 **Finally let us all look at what the magical GIL really is**
-```
+```c
 static​​ ​​_Py_atomic_int​​ ​gil_locked​ ​​=​​ ​​{-​ 1 ​};
 ```
 **The mutex that protects the gil and the conditional variable that other threads wait on the gil**
 
-```
+```c
 static​​ ​COND_T​ ​gil_cond;
 static​​ ​MUTEX_T​ ​gil_mutex;
 ```
-**The thread that holds the GIL wais for the next thread to take the GIL using the switch_cond.**
+**The thread that holds the GIL wais for the next thread to take the GIL using the switch_cond**
 
-```
+```c
 #ifdef​​ ​FORCE_SWITCHING
 /*​ ​This​ ​condition​ ​variable​ ​helps​ ​the​ ​GIL-releasing​ ​thread​ ​wait​ ​for
 ​ ​​ ​​ ​a​ ​GIL​-​awaiting​ ​thread​ ​to​ ​be​ ​scheduled​ ​​and​​ ​take​ ​the​ ​GIL​.​​ ​​*/
@@ -140,7 +140,7 @@ static​​ ​MUTEX_T​ ​switch_mutex;
 
 **Ceval_gil.h line no 135**
 
-```
+```c
 static​​ ​​void​​ ​create_gil​(​void)
 {
 ​ ​​ ​​ ​​ ​MUTEX_INIT​(​gil_mutex​);​​ ​​//​ ​ 1
@@ -167,7 +167,7 @@ static​​ ​​void​​ ​create_gil​(​void)
 
 **ceval.c line no 226**
 
-```
+```c
 void PyEval_InitThreads​(​void)
 {
 ​ ​​ ​​ ​​ ​​if​​ ​​(​gil_created​())
@@ -179,9 +179,9 @@ void PyEval_InitThreads​(​void)
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​pending_lock​ ​​=​​ ​​PyThread_allocate_lock​();
 }
 ```
-**The** ​ ​ **GIL** ​ ​ **can** ​ ​ **be** ​ ​ **initialized** ​ ​ **from** ​ ​ **multiple** ​ ​ **places** ​ ​ **but** ​ ​ **one** ​ ​ **such** ​ ​ **location** ​ ​ **is** ​ ​ **_threadmodule.c** ​ ​ **line no** ​ ​ **1031 **
+**The** ​ ​ **GIL** ​ ​ **can** ​ ​ **be** ​ ​ **initialized** ​ ​ **from** ​ ​ **multiple** ​ ​ **places** ​ ​ **but** ​ ​ **one** ​ ​ **such** ​ ​ **location** ​ ​ **is** ​ ​ **_threadmodule.c** ​ ​ **line no** ​ ​ **1031**
 
-```
+```c
 static​​ ​​PyObject​​ ​*
 thread_PyThread_start_new_thread​(​PyObject​​ ​​*​self​,​​ ​​PyObject​​ ​​*​fargs)
 {
@@ -237,11 +237,11 @@ thread_PyThread_start_new_thread​(​PyObject​​ ​​*​self​,​​ �
 
 1. The​​ ​GIL​ ​maybe​ ​initialized
 ```
-**How** ​ ​ **is** ​ ​ **the** ​ ​ **GIL** ​ ​ **taken** ​ ​**?**
+**How** ​ ​ **is** ​ ​ **the** ​ ​ **GIL** ​ ​ **taken?**
 
-**Ceval_gil.h** ​ ​ **line** ​ ​ **no** ​ ​ **207 **
+**Ceval_gil.h** ​ ​ **line** ​ ​ **no** ​ ​ **207**
 
-```
+```c
 static​​ ​​void​​ ​take_gil​(​PyThreadState​​ ​​*​tstate)
 {
 ​ ​​ ​​ ​​ ​​int​​ ​err;
@@ -313,9 +313,9 @@ _ready:
 ```
 **When** ​ ​ **is** ​ ​ **the** ​ ​ **GIL** ​ ​ **taken?**
 
-**ceval.c** ​ ​ **1108  **
+**ceval.c** ​ ​ **1108**
 
-```
+```c
 ...
 for​​ ​​(;;)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​assert​(​stack_pointer​ ​​>=​​ ​f​->​f_valuestack​);​​ ​​/*​ ​else​ ​underflow​ ​*/
@@ -354,11 +354,11 @@ for​​ ​​(;;)​​ ​{
 2. The​​ ​current​ ​thread​ ​waits​ ​to​ ​acquire​ ​the​ ​GIL​ ​​while​​ ​the​ ​other​ ​thread
     starts​ ​it​'​s​ ​execution.
 ```
-**How** ​ ​ **is** ​ ​ **the** ​ ​ **GIL** ​ ​ **dropped** ​ ​**?**
+**How** ​ ​ **is** ​ ​ **the** ​ ​ **GIL** ​ ​ **dropped?**
 
-**Ceval_gil.h** ​ ​ **line** ​ ​ **no** ​ ​ **172 **
+**Ceval_gil.h** ​ ​ **line** ​ ​ **no** ​ ​ **172**
 
-```
+```c
 static​​ ​​void​​ ​drop_gil​(​PyThreadState​​ ​​*​tstate)
 {
 ​ ​​ ​​ ​​ ​​if​​ ​​(!​_Py_atomic_load_relaxed​(&​gil_locked​))
@@ -408,14 +408,14 @@ static​​ ​​void​​ ​drop_gil​(​PyThreadState​​ ​​*​ts
 
 **The** ​ ​ **instruction** ​ ​ **dispatching** ​ ​ **is** ​ ​ **handled** ​ ​ **by** ​ ​ **two** ​ ​ **macros** ​ ​ **and** ​ ​ **a** ​ ​ **boolean** ​ ​ **variable**
 
-```
+```c
 static​​ ​​_Py_atomic_int​​ ​eval_breaker​ ​​=​​ ​​{​ 0 ​};
 ```
 **When** ​ ​ **eval_breaker** ​ ​ **is** ​ ​ **set** ​ ​ **to** ​ ​ **1** ​ ​ **execute** ​ ​ **instructions** ​ ​ **the** ​ ​ **faster** ​ ​ **way.**
 
 **The** ​ ​ **macros** ​ ​ **that** ​ ​ **handle** ​ ​ **the** ​ ​ **eval** ​ ​ **breaker.**
 
-```
+```c
 #define​​ ​DISPATCH​()​​ ​\
 ​ ​​ ​​ ​​ ​​{​​ ​\
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​if​​ ​​(!​_Py_atomic_load_relaxed​(&​eval_breaker​))​​ ​​{​​ ​​ ​​ ​​ ​​ ​​ ​\
@@ -440,7 +440,7 @@ static​​ ​​_Py_atomic_int​​ ​eval_breaker​ ​​=​​ ​​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​next_instr​++;​​ ​\
 ​ ​​ ​​ ​​ ​​}​​ ​​while​​ ​​(​0)
 ```
-**Observation** ​ ​ **1  **
+**Observation** ​ ​ **1**
 
 
 **1. Fetch** ​ ​ **the** ​ ​ **next** ​ ​ **opcode** ​ ​ **and** ​ ​ **op** ​ ​ **argument**
@@ -450,7 +450,7 @@ static​​ ​​_Py_atomic_int​​ ​eval_breaker​ ​​=​​ ​​{
 
 **All** ​ ​ **the** ​ ​ **opcode** ​ ​ **targets** ​ ​ **are** ​ ​ **defined** ​ ​ **within** ​ ​ **the** ​ ​ **file** ​ ​ **opcode_targets.h**
 
-```
+```c
 static​​ ​​void​​ ​​*​opcode_targets​[​ 256 ​]​​ ​​=​​ ​{
 ​ ​​ ​​ ​​ ​​&&​_unknown_opcode,
 ​ ​​ ​​ ​​ ​​&&​TARGET_POP_TOP,
@@ -472,10 +472,10 @@ static​​ ​​void​​ ​​*​opcode_targets​[​ 256 ​]​​ ​
 ​ ​​&&​TARGET_INPLACE_MATRIX_MULTIPLY,
 ...
 ```
-**How** ​ ​ **are** ​ ​ **the** ​ ​ **targets** ​ ​ **generated** ​ ​**?**
+**How** ​ ​ **are** ​ ​ **the** ​ ​ **targets** ​ ​ **generated?**
 
 
-```
+```c
 #define​​ ​TARGET​(​op​)​​ ​\
 ​ ​​ ​​ ​​ ​TARGET_​##op:​ ​\
 ​ ​​ ​​ ​​ ​​case​​ ​op:
@@ -484,7 +484,7 @@ Generates​​ ​a​ ​jump​ ​target​ ​​and​​ ​a​ ​​sw
 the​ ​loop​ ​mode​ ​​as​​ ​well​ ​​as​​ ​the​ ​fast​ ​loop​ ​breaker​ ​mode.
 ```
 **Example** ​ ​ **of** ​ ​ **an** ​ ​ **opcode** ​ ​ **target** ​ ​ **generation** ​ ​ **for** ​ ​ **opcode** ​ ​ **LOAD_FAST**
-```
+```c
  TARGET​(​LOAD_FAST​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​PyObject​​ ​​*​value​ ​​=​​ ​GETLOCAL​(​oparg​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​if​​ ​​(​value​ ​​==​​ ​NULL​)​​ ​{
@@ -503,7 +503,7 @@ the​ ​loop​ ​mode​ ​​as​​ ​well​ ​​as​​ ​the​ 
 **P.S** ​ ​ **This** ​ ​ **execution** ​ ​ **mode** ​ ​ **is** ​ ​ **used** ​ ​ **when** ​ ​ **the** ​ ​ **Computed** ​ ​ **Goto’s** ​ ​ **using** ​ ​ **eval** ​ ​ **breaker** ​ ​ **is** ​ ​ **not** ​ ​ **used.**
 
 **Let** ​ ​ **us** ​ ​ **understand** ​ ​ **the** ​ ​ **opcode** ​ ​ **implementation** ​ ​ **for** ​ ​ **COMPARE_OP**
-```
+```c
  TARGET​(​COMPARE_OP​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​PyObject​​ ​​*​right​ ​​=​​ ​POP​();
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​PyObject​​ ​​*​left​ ​​=​​ ​TOP​();
@@ -521,7 +521,7 @@ the​ ​loop​ ​mode​ ​​as​​ ​well​ ​​as​​ ​the​ 
 **The** ​ ​ **opcode** ​ ​ **after** ​ ​ **a** ​ ​ **compare** ​ ​ **OP** ​ ​ **is** ​ ​ **either** ​ ​ **a** ​ ​ **POP_JUMP_IF_FALSE** ​ ​ **or** ​ ​ **POP_JUMP_IF_TRUE** ​ ​ **let** ​ ​ **us hence** ​ ​ **observe** ​ ​ **the** ​ ​ **code** ​ ​ **flow** ​ ​ **for** ​ ​ **these** ​ ​ **macros.**
 
 
-```
+```c
 #define​​ ​PREDICT​(​op​)​​ ​\
 ​ ​​ ​​ ​​ ​​do​{​​ ​\
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​_Py_CODEUNIT​​ ​word​ ​​=​​ ​​*​next_instr​;​​ ​\
@@ -535,14 +535,14 @@ the​ ​loop​ ​mode​ ​​as​​ ​well​ ​​as​​ ​the​ 
 #define​​ ​PREDICTED​(​op​)​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​PRED_​##op:
 ```
 **Example:**
-```
+```c
 PREDICTED​(​LOAD_CONST​);
 ```
 ### Topic ​ ​ Important ​ ​ variables ​ ​ initialization ​ ​ within ​ ​ the ​ ​ interpreter ​ ​ loop
 
-**ceval.c** ​ ​ **1045 **
+**ceval.c** ​ ​ **1045**
 
-```
+```c
 ​ ​​ ​​ ​​ ​co​ ​​=​​ ​f​->​f_code​;​​ ​​ ​​ ​​//​ ​ 1
 ​ ​​ ​​ ​​ ​names​ ​​=​​ ​co​->​co_names​;​​ ​​ ​​//​ ​ 2
 ​ ​​ ​​ ​​ ​consts​ ​​=​​ ​co​->​co_consts​;​​ ​​ ​​//​ ​ 3
@@ -580,14 +580,14 @@ PREDICTED​(​LOAD_CONST​);
 ...
 ```
 
-**Observation** ​ ​ **1  **
+**Observation  1**
 
 **Points** ​ ​ **to** ​ ​ **the** ​ ​ **opcode** ​ ​ **to** ​ ​ **be** ​ ​ **executed** ​ ​ **for** ​ ​ **the** ​ ​ **current** ​ ​ **function.**
 
-**Observation** ​ ​ **2  **
+**Observation  2**
 
 **The** ​ ​ **names** ​ ​ **of** ​ ​ **variables** ​ ​ **in** ​ ​ **the** ​ ​ **context** ​ ​ **used** ​ ​ **for** ​ ​ **storing** ​ ​ **and** ​ ​ **loading** ​ ​ **values** ​ ​ **of** ​ ​ **names**
-```
+```c
  ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​TARGET​(​STORE_NAME​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​PyObject​​ ​​*​name​ ​​=​​ ​GETITEM​(​names​,​​ ​oparg​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​PyObject​​ ​​*​v​ ​​=​​ ​POP​();
@@ -595,10 +595,10 @@ PREDICTED​(​LOAD_CONST​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​int​​ ​err;
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​....
 ```
-**Observation** ​ ​ **3 **
+**Observation  3**
 
 **The** ​ ​ **constants** ​ ​ **in** ​ ​ **the** ​ ​ **current** ​ ​ **namespace** ​ ​ **used** ​ ​ **for** ​ ​ **loading** ​ ​ **constants** ​ ​ **computed** ​ ​ **in** ​ ​ **the** ​ ​ **current function** ​ ​ **scope.**
-```
+```c
 PREDICTED​(​LOAD_CONST​);
    ​​ ​​ ​​ ​​ ​TARGET​(​LOAD_CONST​)​​ ​{
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​PyObject​​ ​​*​value​ ​​=​​ ​GETITEM​(​consts​,​​ ​oparg​);
@@ -608,11 +608,11 @@ PREDICTED​(​LOAD_CONST​);
 
      ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​}
 ```
-**Observation** ​ ​ **4 **
+**Observation  4**
 
 **The** ​ ​ **local** ​ ​ **variables** ​ ​ **for** ​ ​ **the** ​ ​ **current** ​ ​ **scope.**
 
-```
+```c
 /*​ ​Local​ ​variable​ ​macros​ ​*/
 
 #define​​ ​GETLOCAL​(​i​)​​ ​​ ​​ ​​ ​​ ​​(​fastlocals​[​i​])
@@ -627,19 +627,19 @@ PREDICTED​(​LOAD_CONST​);
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​GETLOCAL​(​i​)​​ ​​=​​ ​value​;​​ ​\
 ​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​Py_XDECREF​(​tmp​);​​ ​​}​​ ​​while​​ ​​(​0)
 ```
-**Observation** ​ ​ **5  **
+**Observation  5**
 
 **The** ​ ​ **pointer** ​ ​ **to** ​ ​ **the** ​ ​ **first** ​ ​ **instruction** ​ ​ **of** ​ ​ **the** ​ ​ **code** ​ ​ **for** ​ ​ **the** ​ ​ **function** ​ ​ **used** ​ ​ **for** ​ ​ **computing** ​ ​ **jump offsets**
 
-```
+```c
 #define​​ ​JUMPTO​(​x​)​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​(​next_instr​ ​​=​​ ​first_instr​ ​​+​​ ​​(​x​)​​ ​​/
 sizeof​(​_Py_CODEUNIT​))
 ```
-**Observation** ​ ​ **6  **
+**Observation  6**
 
 **The** ​ ​ **stack** ​ ​ **pointer** ​ ​ **for** ​ ​ **all** ​ ​ **stack** ​ ​ **operations** ​ ​ **we** ​ ​ **shall** ​ ​ **cover** ​ ​ **all** ​ ​ **the** ​ ​ **operations** ​ ​ **on** ​ ​ **the** ​ ​ **stack** ​ ​ **in** ​ ​ **the coming** ​ ​ **chapters.**
 
-```
+```c
 #define​​ ​EMPTY​()​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​(​STACK_LEVEL​()​​ ​​==​​ ​​0)
 #define​​ ​TOP​()​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​(​stack_pointer​[-​ 1 ​])
 #define​​ ​SECOND​()​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​ ​​(​stack_pointer​[-​ 2 ​])
@@ -650,9 +650,9 @@ sizeof​(​_Py_CODEUNIT​))
 **The** ​ ​ **stack** ​ ​ **frames** ​ ​ **in** ​ ​ **python** ​ ​ **are** ​ ​ **arranged** ​ ​ **in** ​ ​ **python** ​ ​ **as** ​ ​ **a** ​ ​ **stack** ​ ​ **using** ​ ​ **reverse** ​ ​ **pointers** ​ ​ **to** ​ ​ **the parent** ​ ​ **function** ​ ​ **frame.**
 
 
-**frameobject.c** ​ ​ **line** ​ ​ **no** ​ ​ **608 **
+**frameobject.c** ​ ​ **line** ​ ​ **no** ​ ​ **608**
 
-```
+```c
 PyFrameObject​​ ​*
 PyFrame_New​(​PyThreadState​​ ​​*​tstate​,​​ ​​PyCodeObject​​ ​​*​code​,​​ ​​PyObject​​ ​​*​globals, ​​PyObject​​ ​​*​locals)
 {
@@ -664,9 +664,9 @@ PyFrame_New​(​PyThreadState​​ ​​*​tstate​,​​ ​​PyCodeObj
 ```
 **1. The** ​ ​ **f_back** ​ ​ **pointer** ​ ​ **of** ​ ​ **the** ​ ​ **current** ​ ​ **frame** ​ ​ **ready** ​ ​ **for** ​ ​ **execution** ​ ​ **points** ​ ​ **to** ​ ​ **the** ​ ​ **function**  **frame** ​ ​ **that** ​ ​ **called** ​ ​ **it.**
 
-**ceval.c** ​ ​ **line** ​ ​ **no** ​ ​ **3684 **
+**ceval.c** ​ ​ **line** ​ ​ **no** ​ ​ **3684**
 
-```
+```c
 ....
 exit_eval_frame:
 ​ ​​ ​​ ​​ ​​if​​ ​​(​PyDTrace_FUNCTION_RETURN_ENABLED​())
