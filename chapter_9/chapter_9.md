@@ -58,7 +58,7 @@ We see that in the simplest case of execution the interpreter loop is terminated
 are in the interactive mode of python the command prompt waits for the next command from 
 the user. 
  
-<p style="color:blue"> Exercise: </p>
+<font color="blue"> Exercise: </font>
  
 Create a program with multiple threads and raise an exception in one of these threads and 
 check if all the other threads are suspended or they continue execution. 
@@ -68,31 +68,34 @@ check if all the other threads are suspended or they continue execution.
 Let us take a simple example 
  
 ```C
+
 try:
     a = 100 /0
 except:
     print(" We know it ' s an exception ")
  
-  1	 	        0 SETUP_EXCEPT		     12 (to 14)
+  1	 	        0 SETUP_EXCEPT	 	 12 (to 14)
  
-  2	        	2 LOAD_CONST		      0 (100)
-                4 LOAD_CONST              1 (0)
-                6 BINARY_TRUE_DIVIDE
-                8 STORE_NAME              0 (a)
-	           10 POP_BLOCK
-               12 JUMP_FORWARD           20(to 34)
-  3       >>   14 POP_TOP
- 	           16 POP_TOP
- 	           18 POP_TOP
-  4            20 LOAD_NAME               1(print)
-               22 LOAD_CONST              2('We know it's an exception')
-               24 CALL_FUNCTION           1 
-               26 POP_TOP
-               28 POP_EXCEPT
-               30 JUMP_FORWARD            2(to 34)
-               32 END_FINALLY
-          >>   34 LOAD_CONST              3(None)
-               36 RETURN_VALUE
+  2	        	2 LOAD_CONST		  0 (100)
+                	4 LOAD_CONST              1 (0)
+                	6 BINARY_TRUE_DIVIDE
+                	8 STORE_NAME              0 (a)
+	           	10 POP_BLOCK
+               		12 JUMP_FORWARD          20 (to 34)
+  3       >>   		14 POP_TOP
+ 	           	16 POP_TOP
+ 	           	18 POP_TOP
+  4            		20 LOAD_NAME              1 (print)
+              		22 LOAD_CONST             2 ('We know it's an exception')
+               		24 CALL_FUNCTION          1 
+               		26 POP_TOP
+               		28 POP_EXCEPT
+               		30 JUMP_FORWARD           2 (to 34)
+               		32 END_FINALLY
+          >>   		34 LOAD_CONST             3 (None)
+               		36 RETURN_VALUE
+```
+```C
 while(why != WHY_NOT && f->f_iblock > 0) {
 	 /* Peek at the current block. */
 	 PyTryBlock *b = & f->f_blockstack[f->f_iblock - 1]; 
@@ -396,24 +399,24 @@ except:
    1		 0 SETUP_EXCEPT		    12 (to 14)
    2		 2 LOAD_NAME		     0 (ValueError)
 	     	 4 LOAD_CONST		     0 ('This is the exception')
-  		     6 CALL_FUNCTION		 1
-             8 RAISE_VARARGS		 1
+  		 6 CALL_FUNCTION 	     1
+                 8 RAISE_VARARGS	     1
 	        10 POP_BLOCK
  	        12 JUMP_FORWARD		    20 (to 34) 
    
-   3    >>  14 POP_TOP
+   3    >>  	14 POP_TOP
 	        16 POP_TOP
 	        18 POP_TOP
 
    4 	>>	20 LOAD_NAME		     1 (print)
-		    22 LOAD_CONST		     1 ('Exception')
-		    24 CALL_FUNCTION	     1
-		    26 POP_TOP
-		    28 POP_EXCEPT
- 		    30 JUMP_FORWARD	  	     2 (to 34)
-		    32 END_FINALLY
+		22 LOAD_CONST		     1 ('Exception')
+		24 CALL_FUNCTION	     1
+		26 POP_TOP
+		28 POP_EXCEPT
+ 		30 JUMP_FORWARD	  	     2 (to 34)
+		32 END_FINALLY
 	 >>     34 LOAD_CONST	 	     2 (None)
-		    36 RETURN_VALUE
+		36 RETURN_VALUE
 ```
  
 Let us examine the opcode implementation for the RAISE_VARARGS 
@@ -537,6 +540,6 @@ Observation 1
 Raise the exception on the current thread state and go to the normal exception handling code 
 flow. 
  
-<p style="color:blue"> Exercise </p>
+<font color="blue"> Exercise </font>
  
 Debug this code flow and examine the cases for different types of errors. 
